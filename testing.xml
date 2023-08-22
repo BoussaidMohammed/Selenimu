@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="MyTestSuite">
+    <test name="MyTest">
+        <parameter name="capsule" value="Filter Style Mild" />
+        <parameter name="capsuleQty" value="12"   />
+        <parameter name="machine" value="Essenza Mini White + Aeroccino 3" />
+        <parameter name="machineQty" value="10"   />
+        <classes>
+            <class name="com.sqli.testauto.pages.TestApp" />
+        </classes>
+    </test>
+</suite>
