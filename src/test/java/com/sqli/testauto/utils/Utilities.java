@@ -13,16 +13,27 @@ import java.time.Duration;
 
 public class Utilities {
     private static WebDriver driver;
-    @FindBy(xpath = "//*[@class = 'loading']")
-    private static WebElement loadingPage;
 
     public static void waitUntilInvisibilityOf(WebElement webElement) {
         new WebDriverWait(driver, Duration.ofSeconds(40, 40)).until(ExpectedConditions.invisibilityOf(webElement));
     }
 
+
+
     public static void waitUntilVisibilityOf(WebElement webElement) {
         new WebDriverWait(driver, Duration.ofSeconds(40, 40)).until(ExpectedConditions.visibilityOf(webElement));
     }
+
+    public static void waitPageToLoadCompletely() {
+        new WebDriverWait(driver, Duration.ofSeconds(15)).until(
+                webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+    }
+
+    public static void waitUntilIsPresentOf(WebElement webElement) {
+        new WebDriverWait(driver, Duration.ofSeconds(40, 40)).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath(getElementXPath(webElement))));
+    }
+
 
     public static void pause(long miliSeconds) {
         try {

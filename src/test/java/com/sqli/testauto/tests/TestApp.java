@@ -1,10 +1,12 @@
-package com.sqli.testauto.pages;
+package com.sqli.testauto.tests;
 
-import com.sqli.testauto.listners.WaitLoadingPageAfterClickonLinks;
+import com.sqli.testauto.listners.LoadingPageListener;
+import com.sqli.testauto.pages.*;
 import com.sqli.testauto.utils.PagesCommonActions;
 import com.sqli.testauto.utils.Utilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
@@ -12,6 +14,9 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+
+@SuppressWarnings({"deprecation"})
 public class TestApp {
     private WebDriver driver;
     private CapsuleOriginaleCatalogue capsuleOriginaleCatalogue;
@@ -20,30 +25,31 @@ public class TestApp {
     private LandingPage landingPage;
     private NavBar navBar;
     private MiniCart miniCartPage;
-    private PagesCommonActions pagesCommonActions;
     private Header header;
 
     @BeforeTest
     public void setup(){
         System.setProperty("webdriver.chrome.driver", "src/chromedriver/chromedriver");
-        driver = new ChromeDriver();
+        driver = setupDriverAndPages();
         driver.get("https://ma.buynespresso.com/ma_fr/");
-       // driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(14));
         driver.manage().window().maximize();
-        setupPages(driver);
-        //setupListners(driver);
-        pagesCommonActions.waitLoadingPage();
-        pagesCommonActions.clickCookiesButton();
     }
 
-    /*private void setupListners(WebDriver driver) {
-        EventFiringWebDriver eventDriver = new EventFiringWebDriver(driver);
-        WaitLoadingPageAfterClickonLinks waitLoadingPageAfterClickonLinks = new WaitLoadingPageAfterClickonLinks(pagesCommonActions);
-        eventDriver.register(waitLoadingPageAfterClickonLinks);
-    }*/
+    private WebDriver setupDriverAndPages() {
+        /*ChromeOptions options = new ChromeOptions();
+        options.addArguments("user-data-dir=/home/boussaidmohammed/.config/google-chrome/Default");*/
+        WebDriver webDriver = new ChromeDriver(/*options*/);
+        setupPages(webDriver);
+        EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver(webDriver);
+        LoadingPageListener loadingPageListener = new LoadingPageListener(new PagesCommonActions(webDriver));
+        eventFiringWebDriver.register(loadingPageListener);
+
+
+        //options.addArguments()
+        return eventFiringWebDriver;
+    }
 
     private void setupPages(WebDriver driver) {
-        pagesCommonActions = new PagesCommonActions(driver);
         navBar = new NavBar(driver);
         miniCartPage = new MiniCart(driver);
         header = new Header(driver);
@@ -60,27 +66,22 @@ public class TestApp {
    @Parameters({"capsule", "capsuleQty"})
    @Test(priority = 1)
     public void addcapsuleOriginalProductToCart(String product, int qty){
-       System.out.println(product + "::" + qty);
-        pagesCommonActions.waitLoadingPage();
         capsuleOriginaleCatalogue = new CapsuleOriginaleCatalogue(driver);
         capsuleOriginaleCatalogue.clickAddToCartButton(product, qty);
         miniCartPage.waitUntilIconCounterShows();
     }
-
-
 
     @Test(priority = 2)
     public void navigateToMachineOriginalCatalogue(){
         navBar.machinesMenu();
         navBar.machinesOriginalCataloguePage();
     }
+
     @Parameters({"machine", "machineQty"})
     @Test(priority = 3)
     public void addMachineOriginalProductToCart(String product, int qty){
-        pagesCommonActions.waitLoadingPage();
         machinesOriginaleCatalogue = new MachinesOriginaleCatalogue(driver);
         machinesOriginaleCatalogue.pdpOfProduct(product);
-        pagesCommonActions.waitLoadingPage();
         pdp = new ProductDetailPage(driver);
         pdp.addProductToCart(qty);
         miniCartPage.waitUntilIconCounterChangeItsValue();
@@ -88,20 +89,16 @@ public class TestApp {
 
     @Test(priority = 4)
     @Parameters({"capsule", "capsuleQty","machine", "machineQty"})
-    public void checkProductInMinicart(String capsule, int capsuleQty,
-                                       String machine, int machineQty){
-        pagesCommonActions.waitLoadingPage();
+    public void checkProductInMinicart(String capsule, int capsuleQty, String machine, int machineQty){
         header.goToMiniCart();
         Assert.assertTrue(miniCartPage.isProductExistInCart(capsule, capsuleQty));
         Assert.assertTrue(miniCartPage.isProductExistInCart(machine, machineQty));
-        pagesCommonActions.waitLoadingPage();
         miniCartPage.clickCheckoutButton();
-        pagesCommonActions.waitLoadingPage();
     }
 
     @AfterTest
     public void tearDown(){
-        Utilities.pause(15000);
+        Utilities.pause(10000);
         driver.quit();
     }
 

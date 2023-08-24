@@ -22,6 +22,8 @@ public class PagesCommonActions {
     public void waitLoadingPage(){
         Utilities.waitUntilInvisibilityOf(loadingPageCafeIcon);
         Utilities.waitUntilInvisibilityOf(loadingPageIcon);
+        Utilities.waitPageToLoadCompletely();
+        //Utilities.pause(1500);
     }
 
     public void clickCookiesButton(){

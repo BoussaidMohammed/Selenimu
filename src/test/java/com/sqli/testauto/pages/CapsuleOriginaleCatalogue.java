@@ -1,11 +1,11 @@
 package com.sqli.testauto.pages;
 
+import com.sqli.testauto.exceptions.NegativeException;
 import com.sqli.testauto.utils.Utilities;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class CapsuleOriginaleCatalogue {
@@ -24,7 +24,6 @@ public class CapsuleOriginaleCatalogue {
         setProductInfo(product,qty);
         //WebElement liOfProduct =  driver.findElement(By.xpath("//*/a[contains(@href,'"+this.product+"')]/../.."));
         WebElement liOfProduct =  driver.findElement(By.xpath("//a[contains(text(),'"+product+"')]/ancestor::li[1]"));
-        Utilities.pause(4000);
         Utilities.hoverOnElement(driver, liOfProduct);
         WebElement button = liOfProduct.findElement(By.xpath(".//div/form/button"));
         button.click();

@@ -1,18 +1,43 @@
 package com.sqli.testauto.listners;
 
 import com.sqli.testauto.utils.PagesCommonActions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.events.AbstractWebDriverEventListener;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.events.WebDriverEventListener;
 
-public class WaitLoadingPageAfterClickonLinks implements WebDriverEventListener {
-    private PagesCommonActions pagesCommonActions;
+@SuppressWarnings({"deprecation"})
+public class LoadingPageListener implements WebDriverEventListener {
+    @FindBy(xpath = "//*[@class = 'loader']")
+    private WebElement loadingPageCafeIcon;
+    @FindBy(xpath = "//*[@class='loading']")
+    private WebElement loadingPageIcon;
+    @FindBy(xpath = "//*/button[@id='_evidon-accept-button']")
+    private WebElement cookiesButton;
 
-    public WaitLoadingPageAfterClickonLinks(PagesCommonActions pagesCommonActions) {
+    private String elementType;
+    private PagesCommonActions pagesCommonActions;
+    public LoadingPageListener(PagesCommonActions pagesCommonActions){
         this.pagesCommonActions = pagesCommonActions;
+    }
+
+    @Override
+    public void afterNavigateTo(String url, WebDriver driver) {
+        System.out.println("after navigate to " + url);
+        pagesCommonActions.waitLoadingPage();
+        pagesCommonActions.clickCookiesButton();
+    }
+
+    @Override
+    public void beforeClickOn(WebElement element, WebDriver driver) {
+        elementType = element.getTagName();
+    }
+
+    @Override
+    public void afterClickOn(WebElement element, WebDriver driver) {
+        if("a".equals(elementType) || "button".equals(elementType)){
+            System.out.println(elementType + " is clicked");
+            pagesCommonActions.waitLoadingPage();
+        }
     }
 
     @Override
@@ -40,10 +65,7 @@ public class WaitLoadingPageAfterClickonLinks implements WebDriverEventListener 
 
     }
 
-    @Override
-    public void afterNavigateTo(String url, WebDriver driver) {
 
-    }
 
     @Override
     public void beforeNavigateBack(WebDriver driver) {
@@ -57,7 +79,6 @@ public class WaitLoadingPageAfterClickonLinks implements WebDriverEventListener 
 
     @Override
     public void beforeNavigateForward(WebDriver driver) {
-
     }
 
     @Override
@@ -85,19 +106,11 @@ public class WaitLoadingPageAfterClickonLinks implements WebDriverEventListener 
 
     }
 
-    @Override
-    public void beforeClickOn(WebElement element, WebDriver driver) {
 
-    }
-
-    @Override
-    public void afterClickOn(WebElement element, WebDriver driver) {
-        pagesCommonActions.waitLoadingPage();
-    }
 
     @Override
     public void beforeChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
-
+        System.out.println("changing value of :: " + element);
     }
 
     @Override

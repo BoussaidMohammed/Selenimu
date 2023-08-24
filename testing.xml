@@ -6,7 +6,7 @@
         <parameter name="machine" value="Essenza Mini White + Aeroccino 3" />
         <parameter name="machineQty" value="10"   />
         <classes>
-            <class name="com.sqli.testauto.pages.TestApp" />
+            <class name="com.sqli.testauto.tests.TestApp" />
         </classes>
     </test>
 </suite>
