@@ -1,13 +1,11 @@
-package com.sqli.testauto.pages;
+package com.sqli.testauto.components;
 
 import com.sqli.testauto.utils.Utilities;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
-public class NavBar {
-    private final WebDriver driver;
+public class NavBar extends BaseComponent {
+
     @FindBy(xpath = "//a[contains(@href, 'cafe.html')]")
     private WebElement cafeMenuIcon;
 
@@ -20,10 +18,6 @@ public class NavBar {
     @FindBy(xpath = "//a[contains(@href,'machines/original.html')]")
     private WebElement machinesOriginalCafeCatalogueLink;
 
-    public NavBar(WebDriver driver){
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
-    }
     public void cafesMenu(){
         Utilities.hoverOnElement(driver, cafeMenuIcon);
     }

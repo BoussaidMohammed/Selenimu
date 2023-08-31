@@ -1,12 +1,12 @@
 package com.sqli.testauto.listners;
 
-import com.sqli.testauto.utils.PagesCommonActions;
+import com.sqli.testauto.pages.BasePage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.events.WebDriverEventListener;
 
 @SuppressWarnings({"deprecation"})
-public class LoadingPageListener implements WebDriverEventListener {
+public class PagesListener implements WebDriverEventListener {
     @FindBy(xpath = "//*[@class = 'loader']")
     private WebElement loadingPageCafeIcon;
     @FindBy(xpath = "//*[@class='loading']")
@@ -15,16 +15,18 @@ public class LoadingPageListener implements WebDriverEventListener {
     private WebElement cookiesButton;
 
     private String elementType;
-    private PagesCommonActions pagesCommonActions;
-    public LoadingPageListener(PagesCommonActions pagesCommonActions){
-        this.pagesCommonActions = pagesCommonActions;
+
+    private BasePage basePage;
+
+    public PagesListener(BasePage basePage) {
+        this.basePage = basePage;
     }
 
     @Override
     public void afterNavigateTo(String url, WebDriver driver) {
         System.out.println("after navigate to " + url);
-        pagesCommonActions.waitLoadingPage();
-        pagesCommonActions.clickCookiesButton();
+        basePage.waitLoadingPage();
+        basePage.clickCookiesButton();
     }
 
     @Override
@@ -36,7 +38,7 @@ public class LoadingPageListener implements WebDriverEventListener {
     public void afterClickOn(WebElement element, WebDriver driver) {
         if("a".equals(elementType) || "button".equals(elementType)){
             System.out.println(elementType + " is clicked");
-            pagesCommonActions.waitLoadingPage();
+            basePage.waitLoadingPage();
         }
     }
 

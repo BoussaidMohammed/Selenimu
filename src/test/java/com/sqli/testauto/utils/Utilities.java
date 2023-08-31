@@ -21,7 +21,7 @@ public class Utilities {
 
 
     public static void waitUntilVisibilityOf(WebElement webElement) {
-        new WebDriverWait(driver, Duration.ofSeconds(40, 40)).until(ExpectedConditions.visibilityOf(webElement));
+        new WebDriverWait(driver, Duration.ofSeconds(6, 40)).until(ExpectedConditions.visibilityOf(webElement));
     }
 
     public static void waitPageToLoadCompletely() {
